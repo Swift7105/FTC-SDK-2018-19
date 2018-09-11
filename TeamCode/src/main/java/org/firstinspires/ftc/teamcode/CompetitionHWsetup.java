@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch
 
 public class CompetitionHWsetup
 {
-    /* Public OpMode members. */
+    /* Public OpMode membersfkjebiofbwobfowebufeu. */
     public DcMotor  frontleftMotor   = null;
     public DcMotor  frontrightMotor  = null;
     public DcMotor  backleftMotor = null;
