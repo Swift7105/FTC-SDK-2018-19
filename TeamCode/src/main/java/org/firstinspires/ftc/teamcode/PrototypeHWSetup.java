@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.hardware.Sensor;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -11,11 +12,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class PrototypeHWSetup
 {
     /* Public OpMode membersfkjebiofbwobfowebufeu. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
+    public DcMotor  leftFrontDrive   = null;
+    public DcMotor  rightFrontDrive  = null;
+    public DcMotor  rightBackDrive      = null;
+    public DcMotor  leftBackDrive        = null;
+    public DcMotor  arm      = null;
 
-
-
+    public CRServo intake = null;
+    public Servo door = null;
 
     /*   public DcMotor driveleft = null;
        public DcMotor driveright = null; */
@@ -42,37 +46,49 @@ public class PrototypeHWSetup
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive   = hwMap.dcMotor.get("left_drive");
-        rightDrive  = hwMap.dcMotor.get("right_drive");
-      /*  driveleft = hwMap.dcMotor.get("drive_left");
-        driveright = hwMap.dcMotor.get("drive_riht");*/
+        leftFrontDrive   = hwMap.dcMotor.get("left_front_drive");
+        rightFrontDrive  = hwMap.dcMotor.get("right_front_drive");
+        rightBackDrive = hwMap.dcMotor.get("right_back_drive");
+        leftBackDrive = hwMap.dcMotor.get("left_back_drive");
+        arm = hwMap.dcMotor.get("arm");
 
 
 
 
 
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        arm.setDirection(DcMotor.Direction.FORWARD);
 
-
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
 
 
         // Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
 
-        rightDrive.setPower(0);
-        leftDrive.setPower(0);
-    /*    driveleft.setPower(0);
-        driveright.setPower(0); */
+        leftFrontDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        arm.setPower(0);
 
+        intake   =hwMap.get(CRServo.class, "intake");
+        door   =hwMap.get(Servo.class, "door");
+
+        intake.setPower(0);
+        door.setPosition(0);
 
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
       /*  driveright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); */

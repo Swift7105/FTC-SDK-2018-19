@@ -98,9 +98,28 @@ public class PrototypeDrive extends OpMode{
             robot.backleftMotor.setPower(v3 * v3 * v3 * 5);
             robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
 */
+        robot.leftFrontDrive.setPower((gamepad1.right_stick_y - gamepad1.right_stick_x) - gamepad1.left_stick_x);
+        robot.rightBackDrive.setPower((gamepad1.right_stick_y - gamepad1.right_stick_x) + gamepad1.left_stick_x);
+        robot.rightFrontDrive.setPower((gamepad1.right_stick_y + gamepad1.right_stick_x) + gamepad1.left_stick_x );
+        robot.leftBackDrive.setPower((gamepad1.right_stick_y + gamepad1.right_stick_x) - gamepad1.left_stick_x );
+
+        robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
+
+
         telemetry.addData("X" ,(gamepad1.right_stick_x));
         telemetry.addData("Y" ,(gamepad1.right_stick_y));
 
+        robot.intake.setPower(gamepad2.left_stick_y);
+
+        if (gamepad2.a){
+            robot.door.setPosition(0);
+        }
+        if (gamepad2.x){
+            robot.door.setPosition(.5);
+        }
+        if (gamepad2.y){
+            robot.door.setPosition(1);
+        }
 /*
         robot.frontleftMotor.setPower(v1 * v1 * v1 * 1.50);
         robot.frontrightMotor.setPower(v2 * v2 * v2 * 1.50 );
