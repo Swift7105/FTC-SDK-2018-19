@@ -32,8 +32,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 
 @TeleOp(name="Pushbot: PrototypeDrive", group="Pushbot")
@@ -43,7 +47,8 @@ public class PrototypeDrive extends OpMode{
       boolean relicclaw;
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();// use the class created to define a Pushbot's hardware
-
+     double reverse = 1;
+     double reversem = 1;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -59,8 +64,6 @@ public class PrototypeDrive extends OpMode{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
-        
-
 
     }
 
@@ -80,6 +83,7 @@ public class PrototypeDrive extends OpMode{
     /*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
+
     @Override
     public void loop() {
 /*
@@ -98,42 +102,71 @@ public class PrototypeDrive extends OpMode{
             robot.backleftMotor.setPower(v3 * v3 * v3 * 5);
             robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
 */
-        robot.leftFrontDrive.setPower((gamepad1.right_stick_y - gamepad1.right_stick_x) - gamepad1.left_stick_x);
-        robot.rightBackDrive.setPower((gamepad1.right_stick_y - gamepad1.right_stick_x) + gamepad1.left_stick_x);
-        robot.rightFrontDrive.setPower((gamepad1.right_stick_y + gamepad1.right_stick_x) + gamepad1.left_stick_x );
-        robot.leftBackDrive.setPower((gamepad1.right_stick_y + gamepad1.right_stick_x) - gamepad1.left_stick_x );
+
+        robot.leftFrontDrive.setPower(((gamepad1.right_stick_y - gamepad1.right_stick_x) - gamepad1.left_stick_x)* reverse);
+        robot.rightBackDrive.setPower(((gamepad1.right_stick_y - gamepad1.right_stick_x) + gamepad1.left_stick_x)* reverse);
+        robot.rightFrontDrive.setPower(((gamepad1.right_stick_y + gamepad1.right_stick_x) + gamepad1.left_stick_x) * reverse);
+        robot.leftBackDrive.setPower(((gamepad1.right_stick_y + gamepad1.right_stick_x) - gamepad1.left_stick_x) * reverse );
 
         robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
 
+        robot.intake.setPower(gamepad2.left_stick_y);
+
+        robot.lift.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
+
+        if (gamepad2.a){
+            robot.door.setPosition(.03);
+        }
+        if (gamepad2.x){
+            robot.door.setPosition(.35);
+        }
+
+        if (gamepad2.left_bumper){
+            robot.mineralarm.setPower(-1);
+        }
+        else if (gamepad2.right_bumper){
+            robot.mineralarm.setPower(1);
+        }
+        else {
+            robot.mineralarm.setPower(0);
+        }
+
+        if (gamepad1.right_bumper){
+            if (reversem == 1){
+                reversem = -1;
+                if (reverse > 0){
+                    reverse = -1;
+                }
+                else {
+                    reverse = 1;
+                }
+            }
+        }
+        else {
+            reversem = 1;
+        }
+
+
+        if (gamepad1.left_bumper){
+            if (reverse > 0){
+                reverse = .5;
+            }
+            else {
+                reverse = -.5;
+            }
+        }
+        else {
+            if (reverse > 0){
+                reverse = 1;
+            }
+            else {
+                reverse = -1;
+            }
+        }
 
         telemetry.addData("X" ,(gamepad1.right_stick_x));
         telemetry.addData("Y" ,(gamepad1.right_stick_y));
-
-        robot.intake.setPower(gamepad2.left_stick_y);
-
-        if (gamepad2.a){
-            robot.door.setPosition(0);
-        }
-        if (gamepad2.x){
-            robot.door.setPosition(.5);
-        }
-        if (gamepad2.y){
-            robot.door.setPosition(1);
-        }
-/*
-        robot.frontleftMotor.setPower(v1 * v1 * v1 * 1.50);
-        robot.frontrightMotor.setPower(v2 * v2 * v2 * 1.50 );
-        robot.backleftMotor.setPower(v3 * v3 * v3 * 1.50);
-        robot.backrightMotor.setPower(v4 * v4 * v4 * 1.50);
-
-        if ((gamepad1.left_bumper) ){
-            robot.frontleftMotor.setPower(v1 * 0.25);
-            robot.frontrightMotor.setPower(v2 * 0.25);
-            robot.backleftMotor.setPower(v3 * 0.25);
-            robot.backrightMotor.setPower(v4 * 0.25);
-        }
-*/
-
+        telemetry.addData("R" ,(reverse));
 
         //intake
 /*

@@ -16,8 +16,10 @@ public class PrototypeHWSetup
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  rightBackDrive      = null;
     public DcMotor  leftBackDrive        = null;
+    public DcMotor  lift = null;
     public DcMotor  arm      = null;
 
+    public CRServo mineralarm = null;
     public CRServo intake = null;
     public Servo door = null;
 
@@ -50,6 +52,7 @@ public class PrototypeHWSetup
         rightFrontDrive  = hwMap.dcMotor.get("right_front_drive");
         rightBackDrive = hwMap.dcMotor.get("right_back_drive");
         leftBackDrive = hwMap.dcMotor.get("left_back_drive");
+        lift = hwMap.dcMotor.get("lift");
         arm = hwMap.dcMotor.get("arm");
 
 
@@ -60,6 +63,7 @@ public class PrototypeHWSetup
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        lift.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.FORWARD);
 
 
@@ -72,14 +76,17 @@ public class PrototypeHWSetup
         rightFrontDrive.setPower(0);
         rightBackDrive.setPower(0);
         leftBackDrive.setPower(0);
+        lift.setPower(0);
         arm.setPower(0);
 
         intake   =hwMap.get(CRServo.class, "intake");
         door   =hwMap.get(Servo.class, "door");
+        mineralarm   =hwMap.get(CRServo.class, "mineral_arm");
+
 
         intake.setPower(0);
-        door.setPosition(0);
-
+        door.setPosition(.3);
+        mineralarm.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -88,6 +95,7 @@ public class PrototypeHWSetup
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
       /*  driveright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
