@@ -32,12 +32,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 @TeleOp(name="Pushbot: CompetitionDrive", group="Pushbot")
-//@Disabled
+@Disabled
 public class CompetitionDrive extends OpMode{
     int relicdistace;
       boolean relicclaw;
