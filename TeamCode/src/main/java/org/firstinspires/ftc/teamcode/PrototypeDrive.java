@@ -49,7 +49,7 @@ public class PrototypeDrive extends OpMode{
     PrototypeHWSetup robot = new PrototypeHWSetup();// use the class created to define a Pushbot's hardware
      double reverse = 1;
      double reversem = 1;
-
+     double speed = 1;
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -103,10 +103,10 @@ public class PrototypeDrive extends OpMode{
             robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
 */
 
-        robot.leftFrontDrive.setPower(((gamepad1.right_stick_y - gamepad1.right_stick_x) - gamepad1.left_stick_x)* reverse);
-        robot.rightBackDrive.setPower(((gamepad1.right_stick_y - gamepad1.right_stick_x) + gamepad1.left_stick_x)* reverse);
-        robot.rightFrontDrive.setPower(((gamepad1.right_stick_y + gamepad1.right_stick_x) + gamepad1.left_stick_x) * reverse);
-        robot.leftBackDrive.setPower(((gamepad1.right_stick_y + gamepad1.right_stick_x) - gamepad1.left_stick_x) * reverse );
+        robot.leftFrontDrive.setPower((((gamepad1.right_stick_y - gamepad1.right_stick_x)* reverse)  - gamepad1.left_stick_x) * speed);
+        robot.rightBackDrive.setPower((((gamepad1.right_stick_y - gamepad1.right_stick_x)* reverse)  + gamepad1.left_stick_x) * speed);
+        robot.rightFrontDrive.setPower((((gamepad1.right_stick_y + gamepad1.right_stick_x)* reverse) + gamepad1.left_stick_x ) * speed);
+        robot.leftBackDrive.setPower(((((gamepad1.right_stick_y + gamepad1.right_stick_x) * reverse) - gamepad1.left_stick_x ) * speed));
 
         robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
 
@@ -131,8 +131,16 @@ public class PrototypeDrive extends OpMode{
             robot.mineralarm.setPower(0);
         }
 
+        if (gamepad1.left_bumper){
+            speed = .5;
+        }
+        else {
+            speed = 1;
+        }
+
+
         if (gamepad1.right_bumper){
-            if (reversem == 1){
+            if (reversem == 1) {
                 reversem = -1;
                 if (reverse > 0){
                     reverse = -1;
@@ -141,27 +149,10 @@ public class PrototypeDrive extends OpMode{
                     reverse = 1;
                 }
             }
+
         }
         else {
             reversem = 1;
-        }
-
-
-        if (gamepad1.left_bumper){
-            if (reverse > 0){
-                reverse = .5;
-            }
-            else {
-                reverse = -.5;
-            }
-        }
-        else {
-            if (reverse > 0){
-                reverse = 1;
-            }
-            else {
-                reverse = -1;
-            }
         }
 
         telemetry.addData("X" ,(gamepad1.right_stick_x));
