@@ -85,13 +85,75 @@ public class Auto_Template extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        robot.lift.setPower(1);
+        //robot.lift.setPower(-1);   lower
         sleep(5);
 
+        DriveEncoder(.5, 1,.5,1);
 
         telemetry.update();
 
 
+    }
+
+
+
+
+    public void DrivePower (double leftpower, double rightpower){
+
+        robot.rightFrontDrive.setPower(rightpower);
+        robot.rightBackDrive.setPower(rightpower);
+        robot.leftFrontDrive.setPower(leftpower);
+        robot.leftBackDrive.setPower(leftpower);
+
+    }
+
+
+
+    //Stops all motors in the drivetrain
+    public void DriveStop (){
+        DrivePower(0,0);
+    }
+
+
+
+    //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
+    public void DriveEncoder (double leftpower, int leftdistance, double rightpower, int rightdistance){
+
+
+        //sets the encoder values to zero
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+       // robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //sets the position(distance) to drive to
+        robot.rightFrontDrive.setTargetPosition(rightdistance * 29);
+       // robot.rightBackDrive.setTargetPosition(rightdistance * 29);
+       // robot.leftFrontDrive.setTargetPosition(leftdistance * 29);
+        //robot.leftBackDrive.setTargetPosition(leftdistance * 29);
+
+        //engages the encoders to start tracking revolutions of the motor axel
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //powers up the left and right side of the drivetrain independently
+        DrivePower(leftpower, rightpower);
+
+//&& robot.rightBackDrive.isBusy() &&
+  //              robot.leftBackDrive.isBusy() && robot.leftFrontDrive.isBusy()
+        while (robot.rightFrontDrive.isBusy() )
+        {
+
+        }
+
+        //stops the motors and sets them back to normal operation mode
+        DriveStop();
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
 
