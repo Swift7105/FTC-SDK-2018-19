@@ -88,10 +88,11 @@ public class Auto_Template extends LinearOpMode {
         //robot.lift.setPower(-1);   lower
         sleep(5);
 
-        DriveEncoder(.5, 1,.5,1);
+        frontrightmove(.5, 1);
 
         telemetry.update();
 
+        sleep(5000);
 
     }
 
@@ -115,45 +116,53 @@ public class Auto_Template extends LinearOpMode {
     }
 
 
-
-    //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
-    public void DriveEncoder (double leftpower, int leftdistance, double rightpower, int rightdistance){
-
-
-        //sets the encoder values to zero
+    public void frontrightmove (double frontrightpower, int frontrightdistance){
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //sets the position(distance) to drive to
-        robot.rightFrontDrive.setTargetPosition(rightdistance * 29);
-       // robot.rightBackDrive.setTargetPosition(rightdistance * 29);
-       // robot.leftFrontDrive.setTargetPosition(leftdistance * 29);
-        //robot.leftBackDrive.setTargetPosition(leftdistance * 29);
-
-        //engages the encoders to start tracking revolutions of the motor axel
+        robot.rightFrontDrive.setTargetPosition(frontrightdistance * 89);
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //powers up the left and right side of the drivetrain independently
-        DrivePower(leftpower, rightpower);
-
-//&& robot.rightBackDrive.isBusy() &&
-  //              robot.leftBackDrive.isBusy() && robot.leftFrontDrive.isBusy()
+        robot.rightFrontDrive.setPower(frontrightpower);
         while (robot.rightFrontDrive.isBusy() )
         {
 
         }
-
-        //stops the motors and sets them back to normal operation mode
-        DriveStop();
+        robot.rightFrontDrive.setPower(0);
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       // robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void frontleftmove (double frontleftpower, int frontleftdistance){
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontDrive.setTargetPosition(frontleftdistance * 89);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFrontDrive.setPower(frontleftpower);
+        while (robot.leftFrontDrive.isBusy() )
+        {
+
+        }
+        robot.leftFrontDrive.setPower(0);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void backrightmove (double backrightpower, int backrightdistance){
+        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackDrive.setTargetPosition(backrightdistance * 89);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBackDrive.setPower(backrightpower);
+        while (robot.rightBackDrive.isBusy() )
+        {
+
+        }
+        robot.rightBackDrive.setPower(0);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void backleftmove (double backleftpower, int backleftdistance){
+        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftBackDrive.setTargetPosition(backleftdistance * 89);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBackDrive.setPower(backleftpower);
+        while (robot.leftBackDrive.isBusy() )
+        {
+
+        }
+        robot.leftBackDrive.setPower(0);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
 

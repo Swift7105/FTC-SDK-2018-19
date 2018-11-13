@@ -110,7 +110,7 @@ public class PrototypeDrive extends OpMode{
 
         robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
 
-        robot.intake.setPower(gamepad2.left_stick_y);
+        robot.intake.setPower(-gamepad2.left_stick_y);
 
         robot.lift.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
 
@@ -118,7 +118,7 @@ public class PrototypeDrive extends OpMode{
             robot.door.setPosition(.03);
         }
         if (gamepad2.x){
-            robot.door.setPosition(.35);
+            robot.door.setPosition(.45);
         }
 
         if (gamepad2.left_bumper){
