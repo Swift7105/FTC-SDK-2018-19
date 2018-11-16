@@ -37,6 +37,7 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 
@@ -50,6 +51,7 @@ public class PrototypeDrive extends OpMode{
      double reverse = 1;
      double reversem = 1;
      double speed = 1;
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -103,10 +105,10 @@ public class PrototypeDrive extends OpMode{
             robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
 */
 
-        robot.leftFrontDrive.setPower((((gamepad1.right_stick_y - gamepad1.right_stick_x)* reverse)  - gamepad1.left_stick_x) * speed);
-        robot.rightBackDrive.setPower((((gamepad1.right_stick_y - gamepad1.right_stick_x)* reverse)  + gamepad1.left_stick_x) * speed);
-        robot.rightFrontDrive.setPower((((gamepad1.right_stick_y + gamepad1.right_stick_x)* reverse) + gamepad1.left_stick_x ) * speed);
-        robot.leftBackDrive.setPower(((((gamepad1.right_stick_y + gamepad1.right_stick_x) * reverse) - gamepad1.left_stick_x ) * speed));
+        robot.leftFrontDrive.setPower((((gamepad1.right_stick_y - gamepad1.right_stick_x)* reverse)  - (gamepad1.left_stick_x / 2)) * speed);
+        robot.rightBackDrive.setPower((((gamepad1.right_stick_y - gamepad1.right_stick_x)* reverse)  + (gamepad1.left_stick_x / 2)) * speed);
+        robot.rightFrontDrive.setPower((((gamepad1.right_stick_y + gamepad1.right_stick_x)* reverse) + (gamepad1.left_stick_x / 2)) * speed);
+        robot.leftBackDrive.setPower(((((gamepad1.right_stick_y + gamepad1.right_stick_x) * reverse) - (gamepad1.left_stick_x / 2)) * speed));
 
         robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
 
@@ -155,9 +157,33 @@ public class PrototypeDrive extends OpMode{
             reversem = 1;
         }
 
-        telemetry.addData("X" ,(gamepad1.right_stick_x));
-        telemetry.addData("Y" ,(gamepad1.right_stick_y));
-        telemetry.addData("R" ,(reverse));
+        if (gamepad1.a) {
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        /*
+        if (gamepad1.x) {
+            robot.rightFrontDrive.setTargetPosition(0);
+            robot.rightBackDrive.setTargetPosition(0);
+            robot.leftBackDrive.setTargetPosition(0);
+            robot.leftFrontDrive.setTargetPosition(0);
+
+            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            robot.rightFrontDrive.setPower(-robot.rightFrontDrive.getCurrentPosition());
+            robot.rightBackDrive.setPower(-robot.rightBackDrive.getCurrentPosition());
+            robot.leftFrontDrive.setPower(-robot.leftFrontDrive.getCurrentPosition());
+            robot.leftBackDrive.setPower(-robot.leftBackDrive.getCurrentPosition());
+        }
+*/
+
+        telemetry.addData("drive 1" ,(robot.leftFrontDrive.getCurrentPosition()));
+
 
         //intake
 /*
