@@ -34,11 +34,17 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
 @TeleOp(name="Pushbot: PrototypeDrive", group="Pushbot")
@@ -52,6 +58,16 @@ public class PrototypeDrive extends OpMode{
      double reversem = 1;
      double speed = 1;
 
+//----------------------------------------------------------------------
+    BNO055IMU imu;
+    Orientation             lastAngles = new Orientation();
+    double globalAngle = 0;
+    double turning;
+    double mecanum;
+    double negmecanum;
+//----------------------------------------------------------------------
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -64,8 +80,35 @@ public class PrototypeDrive extends OpMode{
         robot.init(hardwareMap);
       //  relicclaw = false;
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+//----------------------------------------------------------------------
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+        parameters.mode                = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled      = false;
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
+        imu.initialize(parameters);
+
+        telemetry.addData("Mode", "calibrating...");
+        telemetry.update();
+
+        // make sure the imu gyro is calibrated before continuing.
+        while (!imu.isGyroCalibrated())
+        {
+
+        }
+
+        telemetry.addData("Mode", "waiting for start");
+        telemetry.addData("imu calib status", imu.getCalibrationStatus().toString());
+        telemetry.update();
+//----------------------------------------------------------------------
 
     }
 
@@ -104,11 +147,24 @@ public class PrototypeDrive extends OpMode{
             robot.backleftMotor.setPower(v3 * v3 * v3 * 5);
             robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
 */
+        turning = gamepad1.left_stick_x / 2;
+        negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
+        mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
 
-        robot.leftFrontDrive.setPower((((gamepad1.right_stick_y - gamepad1.right_stick_x)* reverse)  - (gamepad1.left_stick_x / 2)) * speed);
-        robot.rightBackDrive.setPower((((gamepad1.right_stick_y - gamepad1.right_stick_x)* reverse)  + (gamepad1.left_stick_x / 2)) * speed);
-        robot.rightFrontDrive.setPower((((gamepad1.right_stick_y + gamepad1.right_stick_x)* reverse) + (gamepad1.left_stick_x / 2)) * speed);
-        robot.leftBackDrive.setPower(((((gamepad1.right_stick_y + gamepad1.right_stick_x) * reverse) - (gamepad1.left_stick_x / 2)) * speed));
+        if (gamepad1.a) {
+            getAngle();
+            if (globalAngle > 0){
+                turning += .5;
+            }
+            else{
+                turning -= .5;
+            }
+        }
+
+        robot.leftFrontDrive.setPower((((negmecanum)* reverse)  - (turning)) * speed);
+        robot.rightBackDrive.setPower((((negmecanum)* reverse)  + (turning)) * speed);
+        robot.rightFrontDrive.setPower((((mecanum)* reverse) + (turning)) * speed);
+        robot.leftBackDrive.setPower(((((mecanum) * reverse) - (turning)) * speed));
 
         robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
 
@@ -157,83 +213,57 @@ public class PrototypeDrive extends OpMode{
             reversem = 1;
         }
 
-        if (gamepad1.a) {
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (gamepad1.x){
+            resetAngle();
         }
-        /*
-        if (gamepad1.x) {
-            robot.rightFrontDrive.setTargetPosition(0);
-            robot.rightBackDrive.setTargetPosition(0);
-            robot.leftBackDrive.setTargetPosition(0);
-            robot.leftFrontDrive.setTargetPosition(0);
-
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            robot.rightFrontDrive.setPower(-robot.rightFrontDrive.getCurrentPosition());
-            robot.rightBackDrive.setPower(-robot.rightBackDrive.getCurrentPosition());
-            robot.leftFrontDrive.setPower(-robot.leftFrontDrive.getCurrentPosition());
-            robot.leftBackDrive.setPower(-robot.leftBackDrive.getCurrentPosition());
-        }
-*/
 
         telemetry.addData("drive 1" ,(robot.leftFrontDrive.getCurrentPosition()));
-
-
-        //intake
-/*
-        if ((gamepad2.right_trigger) > 0.1){     //intake
-            robot.intakeright.setPower(- gamepad2.right_trigger);
-        }
-        else if ((gamepad2.right_bumper) ){      // outtake
-            robot.intakeright.setPower(1);
-        }
-        else if (((gamepad2.right_trigger) < 0.1) || ((gamepad2.right_bumper) = false)) {
-            robot.intakeright.setPower(0);
-        }
-
-
-
-        if (gamepad2.y){
-            //open
-            robot.frontclaw.setPosition(0.01);
-           robot.backclaw.setPosition(0.99);
-            robot.bigclaw.setPosition(0.99);
-
-        }
-        else if (gamepad2.x) {
-            //close
-            robot.frontclaw.setPosition(0.99);
-            robot.backclaw.setPosition(0.01);
-            robot.bigclaw.setPosition(0.01);
-        }
-
-        if (gamepad1.right_bumper){
-            robot.frontclaw.setPosition(0.01);
-            robot.backclaw.setPosition(0.99);
-            robot.bigclaw.setPosition(0.99);
-        }
-
-*/
-
-
-
-
-        updateTelemetry(telemetry);
+//----------------------------------------------------------------------
+        getAngle();
+        telemetry.addData("1 imu heading", lastAngles.firstAngle);
+        telemetry.addData("2 global heading", globalAngle);
+        telemetry.update();
+//----------------------------------------------------------------------
     }
 
 
 
+    //----------------------------------------------------------------------
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
+        globalAngle = 0;
+    }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right.
      */
+    private double getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+    //----------------------------------------------------------------------
+
     @Override
     public void stop() {
     }
