@@ -147,17 +147,17 @@ public class PrototypeDrive extends OpMode{
             robot.backleftMotor.setPower(v3 * v3 * v3 * 5);
             robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
 */
-        turning = gamepad1.left_stick_x / 2;
+        turning = gamepad1.left_stick_x * .75;
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
         mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
 
-        if (gamepad1.a) {
+        if (gamepad1.dpad_up) {
             getAngle();
             if (globalAngle > 0){
-                turning += .5;
+                turning += ((globalAngle / 50) * .5) + .2;
             }
             else{
-                turning -= .5;
+                turning -= ((-globalAngle / 50) * .5) + .2;
             }
         }
 
