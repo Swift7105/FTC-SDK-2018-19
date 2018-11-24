@@ -59,15 +59,17 @@ public class PrototypeDrive extends OpMode{
     PrototypeHWSetup robot = new PrototypeHWSetup();// use the class created to define a Pushbot's hardware
      double reverse = 1;
      double speed = 1;
+     double turning;
+     double mecanum;
+     double negmecanum;
 
 
-//----------------------------------------------------------------------
+     //----------------------------------------------------------------------
     BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle = 0;
-    double turning;
-    double mecanum;
-    double negmecanum;
+    double Xposition = 0;
+    double Yposition = 0;
 //----------------------------------------------------------------------
 
 
@@ -151,10 +153,13 @@ public class PrototypeDrive extends OpMode{
             robot.backleftMotor.setPower(v3 * v3 * v3 * 5);
             robot.backrightMotor.setPower(v4 * v4 * v4 * 5);
 */
+        getAngle();
         turning = gamepad1.left_stick_x * .75;
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
         mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
 
+        Yposition += gamepad1.right_stick_y * Math.cos(globalAngle);
+        Xposition += gamepad1.left_stick_x * Math.sin(globalAngle);
      /*
         if (gamepad1.dpad_up) {
             getAngle();
@@ -167,7 +172,6 @@ public class PrototypeDrive extends OpMode{
         }
 */
         if (gamepad1.right_bumper){
-            getAngle();
             if (globalAngle > 0){
                 turning += ((globalAngle / 25) * .5) + .05;
             }
@@ -235,6 +239,8 @@ public class PrototypeDrive extends OpMode{
 */
         if (gamepad1.x){
             resetAngle();
+            Xposition = 0;
+            Yposition = 1;
         }
 
 
@@ -243,6 +249,11 @@ public class PrototypeDrive extends OpMode{
         getAngle();
         telemetry.addData("1 imu heading", lastAngles.firstAngle);
         telemetry.addData("2 global heading", globalAngle);
+        telemetry.addData("X", Xposition);
+        telemetry.addData("Y", Yposition);
+        telemetry.addData("sin", Math.sin(globalAngle));
+        telemetry.addData("cos", Math.cos(globalAngle));
+
     /*    if (robot.arm.getCurrentPosition() < 415){
             telemetry.addData("angle", robot.arm.getCurrentPosition());
 
