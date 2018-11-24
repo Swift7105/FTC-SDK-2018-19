@@ -159,7 +159,7 @@ public class PrototypeDrive extends OpMode{
         mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
 
         Yposition += gamepad1.right_stick_y * Math.cos(globalAngle);
-        Xposition += gamepad1.left_stick_x * Math.sin(globalAngle);
+        Xposition += gamepad1.right_stick_x * Math.sin(globalAngle);
      /*
         if (gamepad1.dpad_up) {
             getAngle();
@@ -240,7 +240,7 @@ public class PrototypeDrive extends OpMode{
         if (gamepad1.x){
             resetAngle();
             Xposition = 0;
-            Yposition = 1;
+            Yposition = 0;
         }
 
 
