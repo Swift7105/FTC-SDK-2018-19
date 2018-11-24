@@ -98,6 +98,7 @@ public class PrototypeHWSetup
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
       /*  driveright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); */
 

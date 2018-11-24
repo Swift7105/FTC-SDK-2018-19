@@ -46,6 +46,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 
 @TeleOp(name="Pushbot: PrototypeDrive", group="Pushbot")
 //@Disabled
@@ -55,8 +58,8 @@ public class PrototypeDrive extends OpMode{
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();// use the class created to define a Pushbot's hardware
      double reverse = 1;
-     double reversem = 1;
      double speed = 1;
+
 
 //----------------------------------------------------------------------
     BNO055IMU imu;
@@ -95,6 +98,7 @@ public class PrototypeDrive extends OpMode{
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
+
 
         telemetry.addData("Mode", "calibrating...");
         telemetry.update();
@@ -151,6 +155,7 @@ public class PrototypeDrive extends OpMode{
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
         mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
 
+     /*
         if (gamepad1.dpad_up) {
             getAngle();
             if (globalAngle > 0){
@@ -159,6 +164,20 @@ public class PrototypeDrive extends OpMode{
             else{
                 turning -= ((-globalAngle / 50) * .5) + .2;
             }
+        }
+*/
+        if (gamepad1.right_bumper){
+            getAngle();
+            if (globalAngle > 0){
+                turning += ((globalAngle / 25) * .5) + .05;
+            }
+            else{
+                turning -= ((-globalAngle / 25) * .5) + .05;
+            }
+            reverse = -1;
+        }
+        else {
+            reverse = 1;
         }
 
         robot.leftFrontDrive.setPower((((negmecanum)* reverse)  - (turning)) * speed);
@@ -197,6 +216,7 @@ public class PrototypeDrive extends OpMode{
         }
 
 
+/*
         if (gamepad1.right_bumper){
             if (reversem == 1) {
                 reversem = -1;
@@ -212,16 +232,21 @@ public class PrototypeDrive extends OpMode{
         else {
             reversem = 1;
         }
-
+*/
         if (gamepad1.x){
             resetAngle();
         }
 
-        telemetry.addData("drive 1" ,(robot.leftFrontDrive.getCurrentPosition()));
+
+
 //----------------------------------------------------------------------
         getAngle();
         telemetry.addData("1 imu heading", lastAngles.firstAngle);
         telemetry.addData("2 global heading", globalAngle);
+    /*    if (robot.arm.getCurrentPosition() < 415){
+            telemetry.addData("angle", robot.arm.getCurrentPosition());
+
+        } */
         telemetry.update();
 //----------------------------------------------------------------------
     }
