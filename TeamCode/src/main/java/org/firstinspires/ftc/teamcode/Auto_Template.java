@@ -84,8 +84,10 @@ public class Auto_Template extends LinearOpMode {
         //robot.lift.setPower(-1);   lower
         sleep(5);
 
-        frontrightmove(.5, 1);
-
+        frontrightmove(.5, 12.56);
+        frontleftmove(.5,12.56);
+        backleftmove(.5,12.56);
+        backrightmove(.5,12.56);
         telemetry.update();
 
         sleep(5000);
