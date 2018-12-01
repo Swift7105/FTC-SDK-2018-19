@@ -68,6 +68,7 @@ public class PrototypeDrive extends OpMode{
     BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle = 0;
+    double abglobalAngle = 0;
     double Xposition = 0;
     double Yposition = 0;
 //----------------------------------------------------------------------
@@ -158,9 +159,14 @@ public class PrototypeDrive extends OpMode{
         negmecanum = gamepad1.right_stick_y - gamepad1.right_stick_x;
         mecanum = gamepad1.right_stick_y + gamepad1.right_stick_x;
 
-        Yposition += gamepad1.right_stick_y * Math.cos(globalAngle);
-        Xposition += gamepad1.right_stick_x * Math.sin(globalAngle);
-     /*
+       // Yposition += (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle))) + (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle)));
+       // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
+
+
+        Yposition += (-gamepad1.right_stick_y * Math.cos(abglobalAngle)) + (gamepad1.right_stick_x * Math.sin(abglobalAngle));
+
+
+        /*
         if (gamepad1.dpad_up) {
             getAngle();
             if (globalAngle > 0){
@@ -253,6 +259,8 @@ public class PrototypeDrive extends OpMode{
         telemetry.addData("Y", Yposition);
         telemetry.addData("sin", Math.sin(globalAngle));
         telemetry.addData("cos", Math.cos(globalAngle));
+        telemetry.addData("abssin", Math.sin(abglobalAngle));
+        telemetry.addData("abscos", Math.cos(abglobalAngle));
 
     /*    if (robot.arm.getCurrentPosition() < 415){
             telemetry.addData("angle", robot.arm.getCurrentPosition());
@@ -295,6 +303,7 @@ public class PrototypeDrive extends OpMode{
         globalAngle += deltaAngle;
 
         lastAngles = angles;
+        abglobalAngle = Math.abs(globalAngle);
 
         return globalAngle;
     }
