@@ -18,11 +18,12 @@ public class PrototypeHWSetup
     public DcMotor  leftBackDrive        = null;
     public DcMotor  lift = null;
     public DcMotor  arm      = null;
+    public DcMotor  arm2     = null;
 
     public CRServo mineralarm = null;
     public CRServo intake = null;
     public Servo door = null;
-
+    public Servo sensorarm;
     /*   public DcMotor driveleft = null;
        public DcMotor driveright = null; */
 
@@ -54,6 +55,7 @@ public class PrototypeHWSetup
         leftBackDrive = hwMap.dcMotor.get("left_back_drive");
         lift = hwMap.dcMotor.get("lift");
         arm = hwMap.dcMotor.get("arm");
+        arm2 = hwMap.dcMotor.get("arm2");
 
 
 
@@ -65,6 +67,7 @@ public class PrototypeHWSetup
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
         lift.setDirection(DcMotor.Direction.FORWARD);
         arm.setDirection(DcMotor.Direction.FORWARD);
+        arm2.setDirection(DcMotor.Direction.FORWARD);
 
 
 
@@ -78,16 +81,17 @@ public class PrototypeHWSetup
         leftBackDrive.setPower(0);
         lift.setPower(0);
         arm.setPower(0);
+        arm2.setPower(0);
 
         intake   =hwMap.get(CRServo.class, "intake");
         door   =hwMap.get(Servo.class, "door");
         mineralarm   =hwMap.get(CRServo.class, "mineral_arm");
-
+        sensorarm =hwMap.get(Servo.class, "sensor_arm");
 
         intake.setPower(0);
-        door.setPosition(.3);
+        door.setPosition(0);
         mineralarm.setPower(0);
-
+        sensorarm.setPosition(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 
@@ -97,7 +101,7 @@ public class PrototypeHWSetup
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        arm2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
       /*  driveright.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         driveleft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); */

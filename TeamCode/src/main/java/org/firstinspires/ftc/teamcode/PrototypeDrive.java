@@ -68,7 +68,6 @@ public class PrototypeDrive extends OpMode{
     BNO055IMU imu;
     Orientation             lastAngles = new Orientation();
     double globalAngle = 0;
-    double abglobalAngle = 0;
     double Xposition = 0;
     double Yposition = 0;
 //----------------------------------------------------------------------
@@ -163,7 +162,7 @@ public class PrototypeDrive extends OpMode{
        // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
 
 
-        Yposition += (-gamepad1.right_stick_y * Math.cos(abglobalAngle)) + (gamepad1.right_stick_x * Math.sin(abglobalAngle));
+        Yposition += (gamepad1.right_stick_y * Math.cos(globalAngle)) + (gamepad1.right_stick_x * Math.sin(globalAngle));
 
 
         /*
@@ -196,6 +195,7 @@ public class PrototypeDrive extends OpMode{
         robot.leftBackDrive.setPower(((((mecanum) * reverse) - (turning)) * speed));
 
         robot.arm.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
+        robot.arm2.setPower(gamepad2.right_stick_y * gamepad2.right_stick_y * gamepad2.right_stick_y *gamepad2.right_stick_y *gamepad2.right_stick_y / 2 );
 
         robot.intake.setPower(-gamepad2.left_stick_y);
 
@@ -205,7 +205,7 @@ public class PrototypeDrive extends OpMode{
             robot.door.setPosition(.03);
         }
         if (gamepad2.x){
-            robot.door.setPosition(.45);
+            robot.door.setPosition(.4);
         }
 
         if (gamepad2.left_bumper){
@@ -259,8 +259,7 @@ public class PrototypeDrive extends OpMode{
         telemetry.addData("Y", Yposition);
         telemetry.addData("sin", Math.sin(globalAngle));
         telemetry.addData("cos", Math.cos(globalAngle));
-        telemetry.addData("abssin", Math.sin(abglobalAngle));
-        telemetry.addData("abscos", Math.cos(abglobalAngle));
+        telemetry.addData("vel", imu.getVelocity());
 
     /*    if (robot.arm.getCurrentPosition() < 415){
             telemetry.addData("angle", robot.arm.getCurrentPosition());
@@ -303,7 +302,6 @@ public class PrototypeDrive extends OpMode{
         globalAngle += deltaAngle;
 
         lastAngles = angles;
-        abglobalAngle = Math.abs(globalAngle);
 
         return globalAngle;
     }

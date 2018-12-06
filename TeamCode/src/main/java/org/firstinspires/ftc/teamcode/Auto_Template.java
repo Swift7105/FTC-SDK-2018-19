@@ -82,10 +82,17 @@ public class Auto_Template extends LinearOpMode {
         waitForStart();
 
         //robot.lift.setPower(-1);   lower
-        sleep(5);
+        sleep(1000);
+        robot.sensorarm.setPosition(.1);
+        sleep(1000);
+        robot.sensorarm.setPosition(.5);
+        sleep(1000);
+        robot.sensorarm.setPosition(.25);
+        sleep(1000);
 
-        DriveEncoder(.5,35,.5,35);
 
+        DriveForward(.5,35,.5,35);
+        DriveStrafe(.5,35,.5,-35);
         telemetry.update();
 
         sleep(5000);
@@ -111,7 +118,7 @@ public class Auto_Template extends LinearOpMode {
 
 
     //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
-    public void DriveEncoder (double leftpower, int leftdistance, double rightpower, int rightdistance){
+    public void DriveForward (double leftpower, int leftdistance, double rightpower, int rightdistance){
 
 
         //sets the encoder values to zero
@@ -125,6 +132,45 @@ public class Auto_Template extends LinearOpMode {
         robot.rightBackDrive.setTargetPosition(rightdistance * 35);
         robot.leftFrontDrive.setTargetPosition(leftdistance * 35);
         robot.leftBackDrive.setTargetPosition(leftdistance * 35);
+
+        //engages the encoders to start tracking revolutions of the motor axel
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //powers up the left and right side of the drivetrain independently
+        DrivePower(leftpower, rightpower);
+
+        //will pause the program until the motors have run to the previously specified position
+        while (robot.rightFrontDrive.isBusy() && robot.rightBackDrive.isBusy() &&
+                robot.leftFrontDrive.isBusy() && robot.leftBackDrive.isBusy())
+        {
+
+        }
+
+        //stops the motors and sets them back to normal operation mode
+        DriveStop();
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
+    public void DriveStrafe (double leftpower, int leftdistance, double rightpower, int rightdistance){
+
+
+        //sets the encoder values to zero
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //sets the position(distance) to drive to
+        robot.rightFrontDrive.setTargetPosition(rightdistance * 35);
+        robot.rightBackDrive.setTargetPosition(leftdistance * 35);
+        robot.leftFrontDrive.setTargetPosition(leftdistance * 35);
+        robot.leftBackDrive.setTargetPosition(rightdistance * 35);
 
         //engages the encoders to start tracking revolutions of the motor axel
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
