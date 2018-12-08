@@ -66,13 +66,35 @@ public class Auto_Template extends LinearOpMode {
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-
+    private double colora;
+    private double colorb;
+    private double colorc;
+    ColorSensor sensorColor;
+    DistanceSensor sensorDistance;
 
 
 
     @Override public void runOpMode() {
 
         robot.init(hardwareMap);
+
+
+        // get a reference to the color sensor.
+        sensorColor = hardwareMap.get(ColorSensor.class, "blocksensor");
+
+        // get a reference to the distance sensor that shares the same name.
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "blocksensor");
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // sometimes it helps to multiply the raw RGB values with a scale factor
+        // to amplify/attentuate the measured values.
+        final double SCALE_FACTOR = 255;
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //
@@ -82,21 +104,30 @@ public class Auto_Template extends LinearOpMode {
         waitForStart();
 
         //robot.lift.setPower(-1);   lower
-        sleep(1000);
-        robot.sensorarm.setPosition(.1);
-        sleep(1000);
-        robot.sensorarm.setPosition(.5);
-        sleep(1000);
-        robot.sensorarm.setPosition(.25);
-        sleep(1000);
 
 
-        DriveForward(.5,35,.5,35);
-        DriveStrafe(.5,35,.5,-35);
+        robot.lift.setPower(-.5);
+        sleep(3900);
+        robot.lift.setPower(0);
+
+
+        DriveForward(.5,10,.5,10);
+        DriveStrafe(.5,51,.5,-51);
+        DriveForward(.5,-6,.5,-6);
+
+        robot.sensorarm.setPosition(.3);
+
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                 (int) (sensorColor.green() * SCALE_FACTOR),
+                 (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        colora = sensorColor.blue();
+        telemetry.addData("a" ,(colora));
         telemetry.update();
+        sleep(50);
 
         sleep(5000);
-
     }
 
 

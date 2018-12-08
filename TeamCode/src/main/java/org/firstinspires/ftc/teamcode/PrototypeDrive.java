@@ -83,16 +83,16 @@ public class PrototypeDrive extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-      //  relicclaw = false;
+        //  relicclaw = false;
 
 //----------------------------------------------------------------------
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
@@ -106,8 +106,7 @@ public class PrototypeDrive extends OpMode{
         telemetry.update();
 
         // make sure the imu gyro is calibrated before continuing.
-        while (!imu.isGyroCalibrated())
-        {
+        while (!imu.isGyroCalibrated()) {
 
         }
 
@@ -116,11 +115,11 @@ public class PrototypeDrive extends OpMode{
         telemetry.update();
 //----------------------------------------------------------------------
 
-    }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
+        /*
+         * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+         */
+    }
     @Override
     public void init_loop() { }
     /*
@@ -162,8 +161,7 @@ public class PrototypeDrive extends OpMode{
        // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
 
 
-        Yposition += (gamepad1.right_stick_y * Math.cos(globalAngle)) + (gamepad1.right_stick_x * Math.sin(globalAngle));
-
+        Xposition += (gamepad1.right_stick_x * Math.cos(globalAngle));// + (gamepad1.right_stick_y * Math.sin(globalAngle));
 
         /*
         if (gamepad1.dpad_up) {
@@ -177,11 +175,19 @@ public class PrototypeDrive extends OpMode{
         }
 */
         if (gamepad1.right_bumper){
-            if (globalAngle > 0){
-                turning += ((globalAngle / 25) * .5) + .05;
+            if (globalAngle > 1){
+                turning += ((globalAngle / 25) * .5) + .07;
             }
-            else{
-                turning -= ((-globalAngle / 25) * .5) + .05;
+            else if (globalAngle < -1){
+                turning -= ((-globalAngle / 25) * .5) + .07;
+            }
+            else if (Xposition == 0){
+
+            }
+            else {
+                mecanum += (Xposition * .05) + .05;
+                negmecanum -= (Xposition * .05) + .05;
+                Xposition -= (Xposition * .05) + .05;
             }
             reverse = -1;
         }
@@ -259,7 +265,6 @@ public class PrototypeDrive extends OpMode{
         telemetry.addData("Y", Yposition);
         telemetry.addData("sin", Math.sin(globalAngle));
         telemetry.addData("cos", Math.cos(globalAngle));
-        telemetry.addData("vel", imu.getVelocity());
 
     /*    if (robot.arm.getCurrentPosition() < 415){
             telemetry.addData("angle", robot.arm.getCurrentPosition());
