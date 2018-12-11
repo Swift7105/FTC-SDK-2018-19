@@ -161,7 +161,7 @@ public class PrototypeDrive extends OpMode{
        // Xposition += (gamepad1.right_stick_x * Math.sin(Math.abs(globalAngle))) + (-gamepad1.right_stick_y * Math.cos(Math.abs(globalAngle)));
 
 
-        Xposition += (gamepad1.right_stick_x * Math.cos(globalAngle));// + (gamepad1.right_stick_y * Math.sin(globalAngle));
+        Xposition += (gamepad1.right_stick_x * Math.cos(globalAngle));
 
         /*
         if (gamepad1.dpad_up) {
@@ -176,19 +176,19 @@ public class PrototypeDrive extends OpMode{
 */
         if (gamepad1.right_bumper){
             if (globalAngle > 1){
-                turning += ((globalAngle / 25) * .5) + .07;
+                turning += (globalAngle / 40) + .07;
             }
             else if (globalAngle < -1){
-                turning -= ((-globalAngle / 25) * .5) + .07;
+                turning -= (-globalAngle / 40) + .07;
             }
-            else if (Xposition == 0){
+            else{
 
             }
-            else {
-                mecanum += (Xposition * .05) + .05;
-                negmecanum -= (Xposition * .05) + .05;
-                Xposition -= (Xposition * .05) + .05;
-            }
+         /*
+            mecanum += Xposition / 10;
+            negmecanum -= Xposition / 10;
+            Xposition -= Xposition / 10;
+            */
             reverse = -1;
         }
         else {
@@ -263,8 +263,8 @@ public class PrototypeDrive extends OpMode{
         telemetry.addData("2 global heading", globalAngle);
         telemetry.addData("X", Xposition);
         telemetry.addData("Y", Yposition);
-        telemetry.addData("sin", Math.sin(globalAngle));
-        telemetry.addData("cos", Math.cos(globalAngle));
+        telemetry.addData("power", (Xposition / 10));
+
 
     /*    if (robot.arm.getCurrentPosition() < 415){
             telemetry.addData("angle", robot.arm.getCurrentPosition());
