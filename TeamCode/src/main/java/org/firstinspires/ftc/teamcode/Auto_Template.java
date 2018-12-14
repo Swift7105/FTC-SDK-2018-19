@@ -105,17 +105,16 @@ public class Auto_Template extends LinearOpMode {
 
         //robot.lift.setPower(-1);   lower
 
-
-        robot.lift.setPower(-.6);
-        sleep(3900);
+        robot.lift.setPower(-.7);
+        sleep(2800);
         robot.lift.setPower(0);
-
 
         DriveForward(.5,10,.5,10);
         DriveStrafe(.5,51,.5,-51);
-        DriveForward(.5,-6,.5,-6);
+        DriveForward(.5,-3,.5,-3);
 
-        robot.sensorarm.setPosition(.4);
+        robot.sensorarm.setPosition(1);
+        sleep(1000);
 
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                  (int) (sensorColor.green() * SCALE_FACTOR),
@@ -124,10 +123,19 @@ public class Auto_Template extends LinearOpMode {
 
         colora = sensorColor.blue();
         telemetry.addData("a" ,(colora));
-        telemetry.update();
         sleep(50);
 
-        DriveForward(.5,-19,.5,-19);
+        DriveForward(.5,-39,.5,-39);
+
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+
+        colorb = sensorColor.blue();
+        telemetry.addData("b" ,(colorb));
+        telemetry.update();
+        sleep(50);
 
         sleep(5000);
     }
