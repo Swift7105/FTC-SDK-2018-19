@@ -68,7 +68,11 @@ public class Auto_Template extends LinearOpMode {
     private ElapsedTime     runtime = new ElapsedTime();
     private double colora;
     private double colorb;
-    private double colorc;
+    private int ambient;
+    private int ambient2;
+    private int tracker = 0;
+    private double scan1;
+    private double scan2;
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
 
@@ -105,38 +109,79 @@ public class Auto_Template extends LinearOpMode {
 
         //robot.lift.setPower(-1);   lower
 
+
         robot.lift.setPower(-.7);
-        sleep(2800);
+        sleep(3100);
         robot.lift.setPower(0);
 
-        DriveForward(.5,10,.5,10);
-        DriveStrafe(.5,51,.5,-51);
-        DriveForward(.5,-3,.5,-3);
-
-        robot.sensorarm.setPosition(1);
-        sleep(1000);
-
-        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                 (int) (sensorColor.green() * SCALE_FACTOR),
-                 (int) (sensorColor.blue() * SCALE_FACTOR),
-                hsvValues);
-
-        colora = sensorColor.blue();
-        telemetry.addData("a" ,(colora));
-        sleep(50);
-
-        DriveForward(.5,-39,.5,-39);
+        DriveForward(.7,9,  .7,9);
+        DriveStrafe(.7,47,.7,-47);
 
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
                 (int) (sensorColor.blue() * SCALE_FACTOR),
                 hsvValues);
+        ambient = sensorColor.red();
+        ambient2 = sensorColor.green();
 
-        colorb = sensorColor.blue();
-        telemetry.addData("b" ,(colorb));
-        telemetry.update();
+        robot.sensorarm.setPosition(1);
+        sleep(1000);
+
+        DriveForward(.7, -26,.7,-26);
+/*
+        colora = scan1;
         sleep(50);
+*/
+        DriveForward(.7,-25,.7,-25);
 
+      //  colorb = scan1;
+
+        if (scan1 > scan2){
+            DriveForward(.7,2,.7,2);
+            DriveStrafe(.5,15,.5,-15);
+            DriveStrafe(.5,-20,.5,20);
+            DriveForward(.7,80,.7,80);
+        }
+
+        else{
+
+            DriveForward(.7,42,.7,42);
+            if (scan1 > scan2){
+                DriveForward(.7,-2,.7,-2);
+                DriveStrafe(.5,15,.5,-15);
+                DriveStrafe(.5,-20,.5,20);
+                DriveForward(.7,40,.7,40);
+            }
+            else{
+                DriveForward(.7,40,.7,40);
+                DriveStrafe(.5,15,.5,-15);
+                DriveStrafe(.5,-20,.5,20);
+            }
+
+        }
+
+/*
+        sleep(300);
+        DriveForward(.7,40,.7,40);
+
+        if (colora < (colorb - 7)){
+            DriveStrafe(.5,10,.5,-10);
+            DriveStrafe(.5,-15,.5,15);
+
+        }
+
+        sleep(300);
+        DriveForward(.7,40,.7,40);
+
+        if (colorb < (colora + 7) && colorb > (colora - 7)){
+            DriveStrafe(.5,10,.5,-10);
+            DriveStrafe(.5,-15,.5,15);
+
+
+        }*/
+        telemetry.addData("a" ,(scan1));
+        telemetry.addData("b" ,(scan2));
+        telemetry.update();
         sleep(5000);
     }
 
@@ -161,6 +206,9 @@ public class Auto_Template extends LinearOpMode {
     //Allows the ability to run the Mechanum as a tank drive using the encoders to run to a spcific distance at a cetain speed.
     public void DriveForward (double leftpower, int leftdistance, double rightpower, int rightdistance){
 
+        tracker = 0;
+        scan1 = 0;
+        scan2 = 0;
 
         //sets the encoder values to zero
         robot.rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -187,7 +235,16 @@ public class Auto_Template extends LinearOpMode {
         while (robot.rightFrontDrive.isBusy() && robot.rightBackDrive.isBusy() &&
                 robot.leftFrontDrive.isBusy() && robot.leftBackDrive.isBusy())
         {
-
+            if ((sensorColor.red() - ambient) > scan1){
+                scan1 = sensorColor.red() - ambient;
+            }
+            if (sensorColor.green() - ambient2 > scan2){
+                scan2 = sensorColor.green() - ambient;
+            }
+            telemetry.addData("scan" ,(scan1));
+            telemetry.addData("ambient" ,(ambient));
+            telemetry.addData("tracker" ,(tracker));
+            telemetry.update();
         }
 
         //stops the motors and sets them back to normal operation mode
@@ -236,6 +293,9 @@ public class Auto_Template extends LinearOpMode {
         robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
+
+
 }
 
 
