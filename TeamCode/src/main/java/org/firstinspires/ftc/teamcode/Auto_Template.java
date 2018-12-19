@@ -66,8 +66,6 @@ public class Auto_Template extends LinearOpMode {
     /* Declare OpMode members. */
     PrototypeHWSetup robot = new PrototypeHWSetup();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-    private double colora;
-    private double colorb;
     private int ambient;
     private int ambient2;
     private int tracker = 0;
@@ -108,14 +106,26 @@ public class Auto_Template extends LinearOpMode {
         waitForStart();
 
         //robot.lift.setPower(-1);   lower
+/*        robot.sensorarm.setPosition(1);
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
+        while (tracker < 600){
+            telemetry.addData("a" ,(sensorColor.red()));
+            telemetry.addData("b" ,(sensorColor.green()));
+            telemetry.update();
+            sleep(50);
+            tracker += 1;
 
-
+        }
+*/
         robot.lift.setPower(-.7);
         sleep(3100);
         robot.lift.setPower(0);
 
         DriveForward(.7,9,  .7,9);
-        DriveStrafe(.7,47,.7,-47);
+        DriveStrafe(.7,48,.7,-48);
 
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
@@ -127,14 +137,34 @@ public class Auto_Template extends LinearOpMode {
         robot.sensorarm.setPosition(1);
         sleep(1000);
 
-        DriveForward(.7, -26,.7,-26);
-/*
-        colora = scan1;
-        sleep(50);
-*/
-        DriveForward(.7,-25,.7,-25);
+        DriveForward(.7, -14,.7,-14);
+        if (scan1 > scan2){
+            DriveForward(.7, 7,.7,7);
+            DriveStrafe(.5,15,.5,-15);
+            DriveStrafe(.5,-20,.5,20);
+            DriveForward(.7,45,.7,45);
 
-      //  colorb = scan1;
+        }
+        else{
+            DriveForward(.7, -30,.7,-30);
+            DriveForward(.7, -10,.7,-10);
+
+            if (scan1 > scan2) {
+                DriveForward(.7, 3,.7,3);
+                DriveStrafe(.5,15,.5,-15);
+                DriveStrafe(.5,-20,.5,20);
+                DriveForward(.7,80,.7,80);
+
+            }
+            else{
+                DriveForward(.7, 88,.7,88);
+                DriveStrafe(.5,15,.5,-15);
+                DriveStrafe(.5,-20,.5,20);
+            }
+        }
+     /*   DriveForward(.7, -26,.7,-26);
+
+        DriveForward(.7,-25,.7,-25);
 
         if (scan1 > scan2){
             DriveForward(.7,2,.7,2);
@@ -145,40 +175,26 @@ public class Auto_Template extends LinearOpMode {
 
         else{
 
-            DriveForward(.7,42,.7,42);
+            DriveForward(.7,19,.7,19);
+            DriveForward(.7,30,.7,30);
+
             if (scan1 > scan2){
-                DriveForward(.7,-2,.7,-2);
+
+                DriveForward(.7,-9,.7,-9);
                 DriveStrafe(.5,15,.5,-15);
                 DriveStrafe(.5,-20,.5,20);
                 DriveForward(.7,40,.7,40);
             }
-            else{
-                DriveForward(.7,40,.7,40);
-                DriveStrafe(.5,15,.5,-15);
-                DriveStrafe(.5,-20,.5,20);
-            }
+
+           else{
+               DriveForward(.7,40,.7,40);
+               DriveStrafe(.5,15,.5,-15);
+               DriveStrafe(.5,-20,.5,20);
+           }
 
         }
 
-/*
-        sleep(300);
-        DriveForward(.7,40,.7,40);
-
-        if (colora < (colorb - 7)){
-            DriveStrafe(.5,10,.5,-10);
-            DriveStrafe(.5,-15,.5,15);
-
-        }
-
-        sleep(300);
-        DriveForward(.7,40,.7,40);
-
-        if (colorb < (colora + 7) && colorb > (colora - 7)){
-            DriveStrafe(.5,10,.5,-10);
-            DriveStrafe(.5,-15,.5,15);
-
-
-        }*/
+*/
         telemetry.addData("a" ,(scan1));
         telemetry.addData("b" ,(scan2));
         telemetry.update();
@@ -235,16 +251,17 @@ public class Auto_Template extends LinearOpMode {
         while (robot.rightFrontDrive.isBusy() && robot.rightBackDrive.isBusy() &&
                 robot.leftFrontDrive.isBusy() && robot.leftBackDrive.isBusy())
         {
-            if ((sensorColor.red() - ambient) > scan1){
-                scan1 = sensorColor.red() - ambient;
+            if (sensorColor.red() > scan1){
+                scan1 = sensorColor.red();
             }
-            if (sensorColor.green() - ambient2 > scan2){
-                scan2 = sensorColor.green() - ambient;
+            if (sensorColor.green() > scan2){
+                scan2 = sensorColor.green();
             }
             telemetry.addData("scan" ,(scan1));
             telemetry.addData("ambient" ,(ambient));
             telemetry.addData("tracker" ,(tracker));
             telemetry.update();
+
         }
 
         //stops the motors and sets them back to normal operation mode
@@ -293,8 +310,6 @@ public class Auto_Template extends LinearOpMode {
         robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
-
-
 
 }
 
