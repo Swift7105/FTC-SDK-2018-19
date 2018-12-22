@@ -208,7 +208,7 @@ public class PrototypeDrive extends OpMode{
         robot.lift.setPower(gamepad2.left_trigger - gamepad2.right_trigger);
 
         if (gamepad2.a){
-            robot.door.setPosition(.03);
+            robot.door.setPosition(.1);
         }
         if (gamepad2.x){
             robot.door.setPosition(.4);
